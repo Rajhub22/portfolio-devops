@@ -19,7 +19,7 @@ pipeline {
                 bat '''
                 docker stop portfolio-app || exit 0
                 docker rm portfolio-app || exit 0
-                docker run -d -p 8081:80 --name portfolio-app portfolio-app
+                docker run -d -p 8082:80 --name portfolio-app portfolio-app
                 '''
             }
         }
