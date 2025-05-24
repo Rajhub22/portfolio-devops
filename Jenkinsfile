@@ -16,14 +16,11 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                // Stop and remove container if it exists; ignore errors if not
                 bat '''
                 docker stop portfolio-app || exit 0
                 docker rm portfolio-app || exit 0
+                docker run -d -p 8081:80 --name portfolio-app portfolio-app
                 '''
-                
-                // Run container
-                bat 'docker run -d -p 8080:80 --name portfolio-app portfolio-app'
             }
         }
     }
