@@ -4,28 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/Rajhub22/portfolio-devops.git'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build('portfolio-app')
-                }
+                // Build Docker image on Windows
+                bat 'docker build -t portfolio-app .'
             }
         }
 
         stage('Deploy Container') {
             steps {
-                script {
-                    // Stop and remove any running container with the same name
-                    sh 'docker stop portfolio-app-container || true'
-                    sh 'docker rm portfolio-app-container || true'
-
-                    // Run new container
-                    sh 'docker run -d -p 8081:80 --name portfolio-app-container portfolio-app'
-                }
+                // Stop and remove container if already running (optional)
+                bat '''
+                docker stop portfolio-app || echo Container not running
+                docker rm portfolio-app || echo Container not found
+                '''
+                // Run Docker container
+                bat 'docker run -d -p 8080:80 --name portfolio-app portfolio-app'
             }
         }
     }
