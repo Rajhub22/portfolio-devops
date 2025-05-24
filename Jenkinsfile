@@ -10,19 +10,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker image on Windows
                 bat 'docker build -t portfolio-app .'
             }
         }
 
         stage('Deploy Container') {
             steps {
-                // Stop and remove container if already running (optional)
+                // Stop and remove container if it exists; ignore errors if not
                 bat '''
-                docker stop portfolio-app || echo Container not running
-                docker rm portfolio-app || echo Container not found
+                docker stop portfolio-app || exit 0
+                docker rm portfolio-app || exit 0
                 '''
-                // Run Docker container
+                
+                // Run container
                 bat 'docker run -d -p 8080:80 --name portfolio-app portfolio-app'
             }
         }
